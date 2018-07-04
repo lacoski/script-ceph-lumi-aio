@@ -1,4 +1,12 @@
 #!/bin/bash
+# include parse_yaml function
+readonly base_file=`readlink -f "$0"`
+readonly base_path=`dirname $base_file`
+. "$base_path/tool/parse_yaml.sh"
+
+# read yaml file
+eval $(parse_yaml "$base_path/config.yaml" "config_")
+
 
 # STEP 1: Setup host
 hostname_conf(){
@@ -184,4 +192,19 @@ setup_ceph(){
     ceph_mon_setup
 }
 
+# RUN
+
+hostname_conf
+
+pre_setup_install
+
+ip_conf
+
+selinux_conf
+
+ntp_setup
+
+host_file_conf
+
+user_cephdeploy_setup
 
