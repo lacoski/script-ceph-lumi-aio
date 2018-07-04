@@ -5,7 +5,7 @@ readonly base_path=`dirname $base_file`
 . "$base_path/tool/parse_yaml.sh"
 
 # read yaml file
-eval $(parse_yaml "$base_path/config.yaml" "config_")
+eval $(parse_yaml "$base_path/config/config.yaml" "config_")
 
 
 # STEP 1: Setup host
@@ -65,6 +65,7 @@ ip_conf(){
 
 ## setup selinux
 selinux_conf(){
+    setenforce 0
     sed -i 's/SELINUX=enforcing/SELINUX=disabled/g' /etc/sysconfig/selinux
     sed -i 's/SELINUX=enforcing/SELINUX=disabled/g' /etc/selinux/config
 }
@@ -208,3 +209,18 @@ host_file_conf
 
 user_cephdeploy_setup
 
+ssh_key_conf
+
+firewalld_conf
+
+pre_ceph_install
+
+ceph_repo_conf
+
+ceph_deploy_install
+
+ceph_setup
+
+ceph_lumi_install
+
+ceph_mon_setup
