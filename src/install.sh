@@ -28,7 +28,7 @@ pre_setup_install(){
 
 ## setup ip interface
 ip_conf(){
-    echo "${green} Setup IP CONFIG ${reset}" && sleep 2s
+    echo "[${green} Notification ${reset}] Setup IP CONFIG " && sleep 2s
 
     var=$(echo $config_network_interface | tr " " "\n")
     for x in $var
@@ -75,16 +75,16 @@ ip_conf(){
 }
 
 ## setup selinux
-selinux_conf(){
-    echo "${green} Setup SELinux ${reset}" && sleep 2s
+selinux_conf(){    
+    echo "[${green} Notification ${reset}] Setup SELinux" && sleep 2s
     setenforce 0
     sed -i 's/SELINUX=enforcing/SELINUX=disabled/g' /etc/sysconfig/selinux
     sed -i 's/SELINUX=enforcing/SELINUX=disabled/g' /etc/selinux/config
 }
 
 ## setup ntp (chuyen sang chouny)
-ntp_setup(){
-    echo "${green} Setup NTP Server ${reset}" && sleep 2s
+ntp_setup(){    
+    echo "[${green} Notification ${reset}] Setup NTP Server" && sleep 2s
 
     yum install -y ntp ntpdate ntp-doc
     ntpdate 0.us.pool.ntp.org
@@ -94,16 +94,16 @@ ntp_setup(){
 }
 
 host_file_conf(){
-    echo "${green} Setup Host File ${reset}" && sleep 2s
+    echo "[${green} Notification ${reset}] Setup Host File" && sleep 2s    
     ./tool/manage-etc-hosts.sh add $config_host_hostname $config_host_ip
     # echo "setup host file"
     # echo 172.16.2.204 cephaio >> /etc/hosts
 }
 
-user_cephdeploy_setup(){
-    echo "${green} Setup user Ceph deploy ${reset}" && sleep 2s
+user_cephdeploy_setup(){    
+    echo "[${green} Notification ${reset}] Setup user Ceph deploy" && sleep 2s
 
-    echo "setup user Ceph Deploy"
+    echo "Setup user Ceph Deploy"
     useradd -d /home/$config_ceph_userceph -m $config_ceph_userceph
     echo $config_ceph_password | passwd $config_ceph_userceph --stdin
     echo "$config_ceph_userceph ALL = (root) NOPASSWD:ALL" | sudo tee /etc/sudoers.d/cephuser
@@ -113,15 +113,13 @@ user_cephdeploy_setup(){
 
 # STEP 2: setup ssh server
 ssh_key_conf(){
-echo "${green} Setup SSH Server ${reset}" && sleep 2s
+echo "[${green} Notification ${reset}] Setup SSH Server" && sleep 2s
 
 echo -e "\n" | ssh-keygen -t rsa -N ""
 
-cat > ~/.ssh/config <<EOF
-Host cephaio
-    Hostname cephaio
-    User cephuser
-EOF
+echo -e "Host $config_host_hostname" >> ~/.ssh/config
+echo -e "    Hostname $config_host_hostname" >> ~/.ssh/config
+echo -e "    User cephuser" >> ~/.ssh/config
 
 chmod 644 ~/.ssh/config
 
@@ -134,14 +132,14 @@ sshpass -p "$config_root_password" ssh-copy-id -o StrictHostKeyChecking=no root@
 
 # STEP 3: setup firewalld
 firewalld_conf(){
-    echo "${green} Setup firewalld ${reset}" && sleep 2s
+    echo "[${green} Notification ${reset}] Setup Firewalld " && sleep 2s
     systemctl stop firewalld
     systemctl disable firewalld
 }
 
 # STEP 4: setup ceph cluster
 pre_ceph_install(){
-    echo "${green} Pre install Ceph${reset}" && sleep 2s
+    echo "[${green} Notification ${reset}] Pre install Ceph" && sleep 2s
 
     yum install python-setuptools -y
     yum -y install epel-release
@@ -150,13 +148,13 @@ pre_ceph_install(){
 }
 
 ceph_repo_conf(){
-    echo "${green} Create cluster config Ceph${reset}" && sleep 2s
+    echo "[${green} Notification ${reset}] Create cluster config Ceph" && sleep 2s
     cat config/ceph.repo > /etc/yum.repos.d/ceph.repo   
     yum update -y 
 }
 
 ceph_deploy_install(){
-    echo "${green} Building ceph-deploy tool ${reset}" && sleep 2s
+    echo "[${green} Notification ${reset}] Building ceph-deploy tool" && sleep 2s
     git clone https://github.com/ceph/ceph-deploy.git
     cd ceph-deploy/
     ./bootstrap
@@ -164,14 +162,14 @@ ceph_deploy_install(){
 }
 
 ceph_setup(){
-    echo "${green} Create cluster ceph directory ${reset}" && sleep 2s
+    echo "[${green} Notification ${reset}] Create cluster Ceph directory" && sleep 2s
     cd 
     mkdir cluster
     cd cluster/
 }
 
 ceph_lumi_install(){
-    echo "${green} Installing Ceph Luminous ${reset}" && sleep 2s
+    echo "[${green} Notification ${reset}] Installing Ceph Luminous" && sleep 2s
 
     cd ~/cluster/
     ceph-deploy new $config_host_hostname
@@ -181,7 +179,7 @@ ceph_lumi_install(){
 }
 
 ceph_mon_setup(){
-    echo "${green} Installing ceph monitor node${reset}" && sleep 2s
+    echo "[${green} Notification ${reset}] Installing ceph monitor node" && sleep 2s
 
     cd ~/cluster/
     ceph-deploy mon create-initial
@@ -189,7 +187,7 @@ ceph_mon_setup(){
 
 # STEP 5: setup ceph osd
 zap_partition(){
-    echo "${green} Preparing Ceph Disk${reset}" && sleep 2s
+    echo "[${green} Notification ${reset}] Preparing Ceph Disk" && sleep 2s
 
     cd ~/cluster/
     var=$(echo $config_ceph_disk | tr " " "\n")
@@ -202,7 +200,7 @@ zap_partition(){
 }
 
 create_osd(){
-    echo "${green} Creating OSD Disk${reset}" && sleep 2s
+    echo "[${green} Notification ${reset}] Creating OSD Disk" && sleep 2s
     cd ~/cluster/
     var=$(echo $config_ceph_disk | tr " " "\n")
     for x in $var
@@ -215,7 +213,7 @@ create_osd(){
 }
 
 setup_admin_node(){
-    echo "${green} Setup Admin node${reset}" && sleep 2s
+    echo "[${green} Notification ${reset}] Setup Admin node" && sleep 2s
 
     cd ~/cluster/
     ceph-deploy admin $config_host_hostname
@@ -223,6 +221,8 @@ setup_admin_node(){
 }
 
 setup_ceph_mgr(){
+    echo "[${green} Notification ${reset}] Setup Ceph mgr" && sleep 2s
+
     cd ~/cluster/
     ceph-deploy mgr create $config_host_hostname:ceph-mgr-1
 }
@@ -277,18 +277,17 @@ echo "WELCOME TO SCRIPT INSTALL CEPH AIO LUMINOUS" && sleep 2s
 
 echo "-------------------------------------------" && sleep 2s
 
-
-echo "${red}Step 1: Pre instal Ceph ALL IN ONE, setup node${reset}"
+echo "[${red} STEP 1 ${reset}] Pre instal Ceph ALL IN ONE, setup node"
 pre_install
-echo "${red}End: Step 1 ${reset}"
+echo "[${red} END STEP 1 ${reset}]"
 
-echo "${red}Step 2: Setup SSH server and setup firewall${reset}"
+echo "[${red} STEP 2 ${reset}] Setup SSH server and setup firewall"
 setup_ssh_firewall
-echo "${red}End: Step 2 ${reset}"
+echo "[${red} END STEP 2 ${reset}]"
 
-echo "${red}Step 3: Setup Ceph Cluster${reset}"
+echo "[${red} STEP 3 ${reset}] Setup Ceph Cluster"
 setup_ceph
-echo "${red}End: Step 3 ${reset}"
+echo "[${red} END STEP 3 ${reset}]"
 
 
 # zap_partition
