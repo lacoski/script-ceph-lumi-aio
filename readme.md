@@ -66,7 +66,7 @@ root:
 
 Lưu ý: 
 - Khai báo đầu đủ các mục host, network, ceph, root. Thiếu có thể gây lỗi
-- Đường dẫn disk phải là <media>/<disk>. VD: /dev/sdb
+- Đường dẫn disk phải là `<media>/<disk>`. VD: `/dev/sdb`
 - Cần có netmark-num sau các ip (như ví dụ)
 - Cần liệt kế số interface và mô tả interface. Hỗ trợ các tham số cấu hình ip, gateway, dns 
 - Cần cung cấp passwd root để thực thi 1 số tính năng 
