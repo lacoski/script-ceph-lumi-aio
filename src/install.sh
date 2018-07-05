@@ -1,8 +1,7 @@
 #!/bin/bash
 # include parse_yaml function
-exec 3>&1 4>&2
-trap 'exec 2>&4 1>&3' 0 1 2 3
-exec 1>log.out 2>&1
+exec > >(tee trace.log) 2>&1
+exec 2> >(tee error.log)
 
 red=`tput setaf 1`
 green=`tput setaf 2`
