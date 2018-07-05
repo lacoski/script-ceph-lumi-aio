@@ -273,17 +273,21 @@ setup_ceph(){
 }
 
 # RUN
+echo "WELCOME TO SCRIPT INSTALL CEPH AIO LUMINOUS" && sleep 2s
+
+echo "-------------------------------------------" && sleep 2s
+
 
 echo "${red}Step 1: Pre instal Ceph ALL IN ONE, setup node${reset}"
 pre_install
 echo "${red}End: Step 1 ${reset}"
 
 echo "${red}Step 2: Setup SSH server and setup firewall${reset}"
-pre_install
+setup_ssh_firewall
 echo "${red}End: Step 2 ${reset}"
 
 echo "${red}Step 3: Setup Ceph Cluster${reset}"
-pre_install
+setup_ceph
 echo "${red}End: Step 3 ${reset}"
 
 
