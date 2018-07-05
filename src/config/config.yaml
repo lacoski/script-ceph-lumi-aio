@@ -1,5 +1,6 @@
 host:
   hostname: cephaio
+  ip: 172.16.4.204
 network:
   interface: ens160 ens192 
   ens160:
@@ -11,7 +12,7 @@ network:
 ceph:
   userceph: cephuser
   password: 123456
-  disk: sdc sdc
+  disk: /dev/sdb /dev/sdc
   network:
     public: 172.16.4.0/24
     cluster: 10.0.10.0/24
