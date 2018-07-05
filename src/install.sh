@@ -173,8 +173,15 @@ ceph_lumi_install(){
 
     cd ~/cluster/
     ceph-deploy new $config_host_hostname
-    echo "public network = $config_ceph_network_public" >> ~/cluster/ceph.conf
-    echo "cluster network = $config_ceph_network_cluster" >> ~/cluster/ceph.conf
+    if [ ! -z $config_ceph_network_public ]; then
+        echo "public network = $config_ceph_network_public" >> ~/cluster/ceph.conf
+    fi
+
+    if [ ! -z $config_ceph_network_cluster ]; then
+        echo "cluster network = $config_ceph_network_cluster" >> ~/cluster/ceph.conf
+    fi
+    
+    
     ceph-deploy install --release luminous $config_host_hostname
 }
 

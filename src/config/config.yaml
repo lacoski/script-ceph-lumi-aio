@@ -17,4 +17,4 @@ ceph:
     public: 172.16.4.0/24
     cluster: 10.0.10.0/24
 root:
-  password: 0435626533a@
+  password: 123456a@
