@@ -1,4 +1,4 @@
-# Script cài đặt Ceph AIO Luminous
+# Script cài đặt Ceph AIO Luminous (CentOS 7)
 ---
 ## Tài nguyên
 ```
