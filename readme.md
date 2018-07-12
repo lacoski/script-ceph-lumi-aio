@@ -8,8 +8,8 @@ RAM         4 GB
 Disk        sba: os
             sbd,sdc: 2 disk osd
 
-Network     ens160: 1 replicate data
-            ens192: 1 access ceph
+Network     ens160: 1 access ceph
+            ens192: 1 replicate data
 ```
 ## Cách sử dụng
 > Script cần được chạy bằng user `root`
