@@ -161,6 +161,12 @@ ceph_deploy_install(){
     cp virtualenv/bin/ceph-deploy /usr/bin/
 }
 
+ceph_deploy_install_repo(){
+    echo "[${green} Notification ${reset}] Building ceph-deploy tool" && sleep 2s
+    yum install ceph-deploy -y
+    yum update ceph-deploy -y #2.0.1
+}
+
 ceph_setup(){
     echo "[${green} Notification ${reset}] Create cluster Ceph directory" && sleep 2s
     cd 
@@ -262,7 +268,8 @@ setup_ceph(){
 
     ceph_repo_conf
 
-    ceph_deploy_install
+    #ceph_deploy_install
+    ceph_deploy_install_repo
 
     ceph_setup
 
